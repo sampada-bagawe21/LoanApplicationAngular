@@ -3,11 +3,11 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "66996a57-8ba9-4eb3-b1a0-048a72950a8e"
+    "analytics": "5aae611c-480d-49fe-ba4f-cd33bf1d53a2"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "TestApp": {
+    "LoanApplicationUI": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -30,17 +30,10 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+           "styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "src/styles.scss"
+]
           },
           "configurations": {
             "production": {
@@ -70,10 +63,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "TestApp:build:production"
+              "buildTarget": "LoanApplicationUI:build:production"
             },
             "development": {
-              "buildTarget": "TestApp:build:development"
+              "buildTarget": "LoanApplicationUI:build:development"
             }
           },
           "defaultConfiguration": "development"

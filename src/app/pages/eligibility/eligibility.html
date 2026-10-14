@@ -1,0 +1,158 @@
+
+<div class="eligibility-page">
+
+  <div class="eligibility-card">
+
+    <div class="card-header">
+      <h2>Loan Officer - Eligibility Check</h2>
+    </div>
+
+    <div class="card-body">
+
+      <div class="alert alert-success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="alert alert-info" *ngIf="loading">
+        Loading pending requests...
+      </div>
+
+      <div class="selection-row">
+
+        <div class="customer-select">
+          <label for="pendingCustomer">Select Pending Customer</label>
+
+          <select
+            id="pendingCustomer"
+            class="form-select"
+            [(ngModel)]="selectedEligibilityId"
+            (change)="SelectRequest()"
+            [disabled]="loading || decisionLoading">
+
+            <option [ngValue]="null">-- Select Customer --</option>
+
+            <option
+              *ngFor="let item of pendingRequests"
+              [ngValue]="item.eligibilityId">
+
+              {{ item.customerName || item.name || ('Customer ' + item.customerId) }}
+              (ID: {{ item.customerId }})
+            </option>
+          </select>
+        </div>
+
+        <button
+          class="btn btn-primary check-button"
+          (click)="getPendingRequests()"
+          [disabled]="loading || decisionLoading">
+          Refresh Requests
+        </button>
+
+      </div>
+
+      <div class="empty-message"
+        *ngIf="!loading && pendingRequests.length === 0">
+        No pending eligibility requests found.
+      </div>
+
+      <div *ngIf="selectedRequest" class="request-details">
+
+        <h3>Customer Profile & Eligibility Details</h3>
+
+        <div class="details-grid">
+
+          <div class="detail-box">
+            <span>Customer ID</span>
+            <strong>{{ selectedRequest.customerId }}</strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Customer Name</span>
+            <strong>
+              {{ selectedRequest.customerName || selectedRequest.name || 'Not available' }}
+            </strong>
+          </div>
+
+          <div class="detail-box">
+            <span>CIBIL Score</span>
+            <strong>{{ selectedRequest.cibilScore ?? 'Not available' }}</strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Risk Category</span>
+            <strong>{{ selectedRequest.riskCategory ?? 'Not available' }}</strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Monthly Income</span>
+            <strong>
+              {{ selectedRequest.monthlyIncome == null
+                  ? 'Not available'
+                  : (selectedRequest.monthlyIncome | currency:'INR') }}
+            </strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Eligible Loan Amount</span>
+            <strong>
+              {{ selectedRequest.eligibleLoanAmount == null
+                  ? (selectedRequest.loanAmount == null
+                      ? 'Not available'
+                      : (selectedRequest.loanAmount | currency:'INR'))
+                  : (selectedRequest.eligibleLoanAmount | currency:'INR') }}
+            </strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Eligibility ID</span>
+            <strong>{{ selectedRequest.eligibilityId }}</strong>
+          </div>
+
+          <div class="detail-box">
+            <span>Current Status</span>
+            <strong class="pending-status">Pending</strong>
+          </div>
+
+        </div>
+
+        <div class="remarks-section">
+          <label for="remarks">Officer Remarks</label>
+
+          <textarea
+            id="remarks"
+            class="form-control"
+            rows="3"
+            [(ngModel)]="remarks"
+            placeholder="Enter approval or rejection remarks">
+          </textarea>
+        </div>
+
+        <div class="decision-buttons">
+
+          <button
+            class="btn btn-success"
+            (click)="UpdateDecision(true)"
+            [disabled]="decisionLoading">
+
+            {{ decisionLoading ? 'Processing...' : 'Approve Application' }}
+          </button>
+
+          <button
+            class="btn btn-danger"
+            (click)="UpdateDecision(false)"
+            [disabled]="decisionLoading">
+
+            {{ decisionLoading ? 'Processing...' : 'Reject Application' }}
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
