@@ -1,0 +1,26 @@
+<p>pending-loans works!</p>
+
+
+<table class="table">
+ <thead>
+   <tr>
+          
+          <th>Customer Name</th>
+          <th>Loan Type</th>
+          <th>Loan Amount</th>
+          <th>Status</th>
+          <th>Applied Date </th>
+   </tr>
+ </thead>
+ <tbody>
+   <tr  *ngFor="let loan of pending">
+         <td>{{ loan.customerName }}</td>
+          <td>{{ loan.loanType }}</td>
+          <td>{{ loan.loanAmount }}</td>
+           <td>{{ loan.currentStatus }}</td> 
+          <td>{{ loan.appliedDate}}</td>
+          <td>
+   </tr>
+
+ </tbody>
+</table>

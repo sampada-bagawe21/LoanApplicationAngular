@@ -1,0 +1,12 @@
+<p>form1 works!</p>
+
+<form #empform="ngForm" (ngSubmit)="getdata(empform.value)">
+
+{{empform.value | json}}<br><br>
+
+name <input type="text" name="name" #name:mgModel ngModel><br><br>
+contact <input type="text" name="contact" #contact:mgModel ngModel><br><br>
+email <input type="text" name="email" #email:mgModel ngModel><br><br>
+<input type="submit" value="submit">
+
+</form>

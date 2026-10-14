@@ -1,0 +1,26 @@
+<p>third works!</p>
+
+<input type="color" #data>
+<input type="submit" (click)="getdata (data.value)"><br><br>
+
+
+<h1 [style.color]="mydata">Naik</h1>
+
+
+
+<input type="color" [(ngModel)]="col">
+
+<h1 [style.color]="col">Naik</h1>
+
+
+<input type="number" [(ngModel)]="fno" (input)="Calci()"><br>
+<input type="number" [(ngModel)]="sno" (input)="Calci()"><br>
+
+choise
+<select [(ngModel)]="choise" (change)="Calci()">
+    <option>+</option>
+     <option>*</option>
+      <option>-</option>
+</select><br>
+
+result:{{res}}
