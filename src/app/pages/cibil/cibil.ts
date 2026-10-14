@@ -1,25 +1,29 @@
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { cibilapiService } from '../../services/cibil-api';
 
 @Component({
   selector: 'app-cibil',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cibil.html',
   styleUrl: './cibil.scss'
 })
 export class Cibil {
-
   customerId = 1;
   cibil: any = null;
   loading = false;
   errorMessage = '';
 
-  constructor(private service: cibilapiService) {}
+  constructor(
+    private service: cibilapiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  checkScore() {
+  checkScore(): void {
     if (!this.customerId || this.customerId < 1) {
       this.errorMessage = 'Please select a valid customer.';
       return;
@@ -30,20 +34,34 @@ export class Cibil {
     this.cibil = null;
 
     this.service.generateCibil(this.customerId)
-      .pipe(finalize(() => this.loading = false))
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+          console.log('Loading finished:', this.loading);
+        })
+      )
       .subscribe({
         next: (res: any) => {
-          this.cibil = res?.data ?? null;
+          console.log('Full API response:', res);
 
-          if (!this.cibil) {
-            this.errorMessage = 'No CIBIL report was returned.';
+          const report = res?.data ?? res;
+
+          if (report?.cibilScore != null) {
+            this.cibil = report;
+          } else {
+            this.errorMessage = 'CIBIL score is missing from the response.';
           }
+
+          this.cdr.detectChanges();
         },
         error: (err: any) => {
           console.error('CIBIL API error:', err);
           this.errorMessage =
-            err.error?.message ||
+            err?.error?.message ||
             `Unable to generate CIBIL score. HTTP ${err.status}`;
+
+          this.cdr.detectChanges();
         }
       });
   }
@@ -51,7 +69,7 @@ export class Cibil {
   get scoreColor(): string {
     if (!this.cibil) return '#6c757d';
 
-    const score = this.cibil.cibilScore;
+    const score = Number(this.cibil.cibilScore);
 
     if (score >= 800) return '#198754';
     if (score >= 700) return '#ffc107';

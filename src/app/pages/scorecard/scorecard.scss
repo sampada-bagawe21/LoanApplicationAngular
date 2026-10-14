@@ -1,0 +1,77 @@
+
+.scorecard-container {
+  padding: 30px;
+  background: #f3f6fc;
+  min-height: 100%;
+}
+
+.index-card,
+.result-card {
+  border: none;
+  border-radius: 18px;
+  padding: 30px;
+  background: #ffffff;
+}
+
+.index-card h2 {
+  font-size: 38px;
+  margin-bottom: 28px;
+  color: #222222;
+}
+
+.scorecard-header {
+  background: #0d6efd;
+  color: white;
+  padding: 28px 30px;
+  margin: -30px -30px 30px;
+  border-radius: 8px 8px 0 0;
+}
+
+.scorecard-header h2 {
+  margin: 0;
+  font-size: 38px;
+}
+
+.scorecard-body {
+  padding: 0;
+}
+
+.table {
+  vertical-align: middle;
+  margin-bottom: 0;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+}
+
+.loan-amount {
+  color: #198754;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+}
+
+@media (max-width: 768px) {
+  .scorecard-container {
+    padding: 12px;
+  }
+
+  .index-card,
+  .result-card {
+    padding: 15px;
+  }
+
+  .index-card h2,
+  .scorecard-header h2 {
+    font-size: 26px;
+  }
+
+  .scorecard-header {
+    margin: -15px -15px 20px;
+    padding: 20px 15px;
+  }
+}

@@ -1,1 +1,138 @@
-<p>scorecard works!</p>
+
+<div class="scorecard-container">
+
+  <!-- Customer Index -->
+  <div class="card shadow index-card" *ngIf="!scorecard">
+
+    <h2>Customer List</h2>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Customer Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Income</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let c of allCustomers">
+            <td>{{ c.customerId }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.email }}</td>
+            <td>{{ c.income | currency:'INR' }}</td>
+            <td>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="ViewScoreCard(c.customerId)"
+                [disabled]="loading">
+                {{
+                  loading && selectedCustomerId === c.customerId
+                    ? 'Loading...'
+                    : 'View Score Card'
+                }}
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="allCustomers.length === 0 && !errorMessage">
+            <td colspan="5" class="text-center">
+              Loading customers...
+            </td>
+          </tr>
+
+          <tr *ngIf="allCustomers.length === 0 && errorMessage">
+            <td colspan="5" class="text-center">
+              No customer data available.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Selected Customer ScoreCard -->
+  <div class="card shadow result-card" *ngIf="scorecard">
+
+    <div class="scorecard-header">
+      <h2>Loan Score Card</h2>
+    </div>
+
+    <div class="scorecard-body">
+
+      <button
+        class="btn btn-secondary mb-4"
+        (click)="BackToList()">
+        Back to Customer List
+      </button>
+
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Customer Id</th>
+            <td>{{ scorecard.customerId }}</td>
+          </tr>
+
+          <tr>
+            <th>CIBIL Score</th>
+            <td>{{ scorecard.cibilScore }}</td>
+          </tr>
+
+          <tr>
+            <th>Risk Category</th>
+            <td>{{ scorecard.riskCategory }}</td>
+          </tr>
+
+          <tr>
+            <th>Maximum Allowable EMI</th>
+            <td>
+              {{ scorecard.maximumAllowableEmi | currency:'INR' }}
+            </td>
+          </tr>
+
+          <tr>
+            <th>Available EMI</th>
+            <td>
+              {{ scorecard.availableEmi | currency:'INR' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 class="mt-4">Eligible Loan Options</h4>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>ScoreCard ID</th>
+              <th>Interest Rate</th>
+              <th>Tenure (Months)</th>
+              <th>Eligible Loan Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let option of scorecard.loanOptions">
+              <td>{{ option.scoreCardId }}</td>
+              <td>{{ option.interestRate }}%</td>
+              <td>{{ option.tenureInMonths }}</td>
+              <td class="loan-amount">
+                {{ option.eligibleLoanAmount | currency:'INR' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
