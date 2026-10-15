@@ -1,0 +1,149 @@
+
+<div class="cibil-page container-fluid py-4">
+  <div class="cibil-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>📈 CIBIL Score</h2>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="checkScore()"
+        [disabled]="loading">
+
+        {{ loading ? 'Checking...' : 'Check Score' }}
+      </button>
+    </div>
+
+    <div class="mb-4">
+      <label for="customerId" class="form-label">
+        Select Customer
+      </label>
+
+      <select
+        id="customerId"
+        class="form-select"
+        [(ngModel)]="customerId"
+        [disabled]="loading">
+
+        <option [ngValue]="1">Customer 1</option>
+        <option [ngValue]="2">Customer 2</option>
+        <option [ngValue]="3">Customer 3</option>
+                <option [ngValue]="7">Customer 5</option>
+
+      </select>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="loading" class="text-primary mb-3">
+      Generating CIBIL score, please wait...
+    </div>
+
+    <div *ngIf="cibil as report">
+
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="detail-label">Customer ID</div>
+            <div class="detail-value">
+              {{ report.customerId }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="detail-label">PAN Number</div>
+            <div class="detail-value">
+              {{ report.panNo || 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="score-section">
+
+        <div class="score-number" [style.color]="scoreColor">
+          {{ report.cibilScore }}
+        </div>
+
+        <h4 [style.color]="scoreColor">
+          {{ report.cibilStatus || 'Status unavailable' }}
+        </h4>
+
+        <p class="mt-3 mb-1">Last Checked Date</p>
+
+        <ng-container *ngIf="report.checkDate; else noDate">
+          <strong>
+            {{ report.checkDate | date:'dd MMM yyyy' }}
+          </strong>
+
+          <div>
+            {{ report.checkDate | date:'hh:mm a' }}
+          </div>
+        </ng-container>
+
+        <ng-template #noDate>
+          <div>N/A</div>
+        </ng-template>
+
+      </div>
+
+      <div class="row g-3 mt-3">
+
+        <div class="col-md-4">
+          <div class="detail-box">
+            <div class="detail-label">Income Score</div>
+            <div class="detail-value">
+              {{ report.incomeScore ?? 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="detail-box">
+            <div class="detail-label">Employment Score</div>
+            <div class="detail-value">
+              {{ report.employmentScore ?? 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="detail-box">
+            <div class="detail-label">Age Score</div>
+            <div class="detail-value">
+              {{ report.ageScore ?? 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="detail-label">FOIR</div>
+            <div class="detail-value">
+              {{ report.foir ?? 'N/A' }}{{ report.foir != null ? '%' : '' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="detail-label">FOIR Score</div>
+            <div class="detail-value">
+              {{ report.foirScore ?? 'N/A' }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

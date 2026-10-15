@@ -1,0 +1,150 @@
+
+.cibil-page {
+  min-height: 100vh;
+  background: #f4f6fb;
+  padding: 30px;
+}
+
+.cibil-card {
+  background: #fff;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.customer-input {
+  width: 130px;
+  min-height: 48px;
+}
+
+.check-btn {
+  min-height: 48px;
+  padding: 10px 24px;
+  border-radius: 9px;
+  background: #2864ed;
+}
+
+.detail-box {
+  background: #f7f8fa;
+  padding: 20px;
+  border-radius: 12px;
+  height: 100%;
+}
+
+.detail-label {
+  color: #818a99;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  color: #171b25;
+  font-size: 21px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.score-section {
+  text-align: center;
+  margin-top: 35px;
+}
+
+.score-gauge {
+  position: relative;
+  width: 300px;
+  height: 165px;
+  margin: 0 auto 10px;
+  border-radius: 300px 300px 0 0;
+  overflow: hidden;
+
+  background: conic-gradient(
+    from 270deg at 50% 100%,
+    #dc3545 0deg,
+    #ff9800 55deg,
+    #ffeb3b 105deg,
+    #198754 180deg,
+    transparent 180deg
+  );
+}
+
+.gauge-inner {
+  position: absolute;
+  width: 230px;
+  height: 125px;
+  bottom: 0;
+  left: 35px;
+  background: white;
+  border-radius: 230px 230px 0 0;
+}
+
+.score-gauge::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 115px;
+  background: var(--score-color);
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(
+    calc(var(--score-progress) - 90deg)
+  );
+  z-index: 2;
+}
+
+.gauge-labels {
+  position: absolute;
+  bottom: -28px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: #777;
+  z-index: 3;
+}
+
+.score-number {
+  margin-top: 45px;
+  font-size: 58px;
+  font-weight: 750;
+}
+
+.score-status {
+  font-weight: 600;
+}
+
+.last-checked {
+  color: #737b89;
+  margin-top: 25px;
+  line-height: 1.8;
+}
+
+.last-checked strong {
+  color: #202530;
+  font-size: 18px;
+}
+
+.empty-message {
+  margin-top: 45px;
+  padding: 35px 15px;
+  background: #f7f8fa;
+  border-radius: 12px;
+  text-align: center;
+  color: #777;
+}
+
+@media (max-width: 576px) {
+  .cibil-page {
+    padding: 12px;
+  }
+
+  .cibil-card {
+    padding: 20px 14px;
+  }
+
+  .score-gauge {
+    transform: scale(0.85);
+    transform-origin: top center;
+    margin-bottom: -15px;
+  }
+}

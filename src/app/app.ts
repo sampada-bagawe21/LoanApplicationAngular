@@ -10,6 +10,4 @@ import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('TestApp');
-}
+export class App {}
