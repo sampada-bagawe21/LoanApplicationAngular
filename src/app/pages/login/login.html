@@ -1,0 +1,135 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
+  <div class="card shadow border-0 w-100" style="max-width: 430px">
+    <!-- LoanApp Header -->
+    <div class="card-header bg-primary text-white text-center py-4">
+      <h1 class="h2 fw-bold mb-1">LoanApp</h1>
+      <p class="mb-0">Loan Management System</p>
+    </div>
+
+    <div class="card-body p-4">
+      <!-- LOGIN AND 2FA MESSAGES -->
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- NORMAL LOGIN SCREEN -->
+      @if (!requiresTwoFactor) {
+        <h2 class="h4 text-center mb-4">Login</h2>
+
+        <form #loginForm="ngForm" (ngSubmit)="login()">
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label fw-semibold"> Email </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              [(ngModel)]="formData.email"
+              placeholder="Enter your email"
+              autocomplete="username"
+              required
+              email
+            />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <label for="password" class="form-label fw-semibold"> Password </label>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              [(ngModel)]="formData.password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <!-- Login and Register -->
+          <div class="d-flex gap-3 mb-3">
+            <button
+              type="submit"
+              class="btn btn-primary flex-fill"
+              [disabled]="loginForm.invalid || isSubmitting"
+            >
+              {{ isSubmitting ? 'Logging in...' : 'Login' }}
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-outline-primary flex-fill"
+              (click)="goToRegister()"
+            >
+              Register
+            </button>
+          </div>
+        </form>
+
+        <!-- Separator -->
+        <div class="d-flex align-items-center my-3">
+          <hr class="flex-grow-1" />
+          <span class="px-3 text-secondary small">OR</span>
+          <hr class="flex-grow-1" />
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <div class="d-flex justify-content-center">
+          <div id="googleButton"></div>
+        </div>
+      }
+
+      <!-- TWO-FACTOR AUTHENTICATION SCREEN -->
+      @if (requiresTwoFactor) {
+        <h2 class="h4 text-center mb-2">Two-Factor Authentication</h2>
+
+        <p class="text-secondary text-center mb-4">
+          Open your Authenticator app and enter the current 6-digit verification code.
+        </p>
+
+        <form #otpForm="ngForm" (ngSubmit)="verifyTwoFactor()">
+          <div class="mb-4">
+            <label for="otpCode" class="form-label fw-semibold"> Authentication Code </label>
+
+            <input
+              type="text"
+              id="otpCode"
+              name="otpCode"
+              class="form-control text-center fs-4"
+              [(ngModel)]="otpCode"
+              placeholder="000000"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              pattern="[0-9]{6}"
+              minlength="6"
+              maxlength="6"
+              required
+            />
+          </div>
+
+          <div class="d-grid">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="otpForm.invalid || isSubmitting"
+            >
+              {{ isSubmitting ? 'Verifying...' : 'Verify Code' }}
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+</div>

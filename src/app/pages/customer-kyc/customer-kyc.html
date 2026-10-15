@@ -1,0 +1,145 @@
+<div class="container py-4 py-md-5">
+  <!-- Page Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">My KYC Documents</h2>
+      <p class="text-secondary mb-0">Upload your documents and track your verification status.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="loadMyDocuments()"
+      [disabled]="isLoading"
+    >
+      {{ isLoading ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Upload Form -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-4">
+      <h4 class="fw-semibold mb-3">Upload KYC Document</h4>
+
+      <form (ngSubmit)="uploadDocument()">
+        <div class="row g-3">
+          <div class="col-md-5">
+            <label for="documentType" class="form-label fw-semibold"> Document Type </label>
+
+            <select
+              id="documentType"
+              name="documentType"
+              class="form-select"
+              [(ngModel)]="documentType"
+              required
+            >
+              <option value="" disabled>Select document type</option>
+
+              <option *ngFor="let type of documentTypes" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-7">
+            <label for="documentFile" class="form-label fw-semibold"> Choose Document </label>
+
+            <input
+              #fileInput
+              id="documentFile"
+              type="file"
+              class="form-control"
+              accept=".pdf,.jpg,.jpeg,.png"
+              (change)="onFileSelected($event)"
+              required
+            />
+
+            <small *ngIf="selectedFile" class="text-success">
+              Selected: {{ selectedFile.name }}
+            </small>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary px-4" [disabled]="isUploading">
+            {{ isUploading ? 'Uploading...' : 'Upload Document' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Uploaded Documents -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="p-4">
+        <h4 class="fw-semibold mb-1">Uploaded Documents</h4>
+        <p class="text-secondary small mb-0">
+          View your documents and check their verification status.
+        </p>
+      </div>
+
+      <div *ngIf="isLoading" class="text-center py-4">Loading documents...</div>
+
+      <div *ngIf="!isLoading" class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Document Name</th>
+              <th>View Document</th>
+              <th>Status</th>
+              <th class="pe-4">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let doc of documents">
+              <td class="ps-4 fw-semibold">
+                {{ doc.fileName || doc.documentType || 'KYC Document' }}
+              </td>
+
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  [disabled]="!doc.documentId"
+                  (click)="viewDocument(doc)"
+                >
+                  View Document
+                </button>
+              </td>
+
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(getDocumentStatus(doc))">
+                  {{ getDocumentStatus(doc) }}
+                </span>
+              </td>
+
+              <td class="pe-4">
+                <span class="badge" [ngClass]="getActionClass(getDocumentStatus(doc))">
+                  {{ getActionLabel(getDocumentStatus(doc)) }}
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="documents.length === 0">
+              <td colspan="4" class="text-center py-5">
+                <h5 class="fw-semibold">No documents found</h5>
+                <p class="text-secondary mb-0">Upload a KYC document using the form above.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

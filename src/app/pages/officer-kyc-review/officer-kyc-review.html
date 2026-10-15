@@ -1,0 +1,190 @@
+<div class="container py-4 py-md-5">
+  <!-- Page Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">Review Customer KYC</h2>
+      <p class="text-secondary small mb-1">Review the customer's uploaded documents.</p>
+      <span class="badge bg-light text-dark border"> Customer ID: {{ customerId }} </span>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="goBack()">
+      Back to Customers
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success py-2 mb-3" role="alert">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger py-2 mb-3" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Documents Card -->
+  <div class="card border-0 shadow-sm review-card">
+    <div class="card-header bg-white px-3 py-3">
+      <h5 class="fw-semibold mb-1">Uploaded Documents</h5>
+      <p class="text-secondary small mb-0">Select the pending documents you want to review.</p>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="text-center py-4">
+      <div class="spinner-border spinner-border-sm text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <span class="text-secondary small ms-2">Loading documents...</span>
+    </div>
+
+    <!-- Documents Table -->
+    <div *ngIf="!isLoading" class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-3 select-column">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                aria-label="Select all pending documents"
+                [checked]="allSelected"
+                [disabled]="isProcessing || documents.length === 0"
+                (change)="toggleAll($event)"
+              />
+            </th>
+
+            <th>Document Type</th>
+            <th>View</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let doc of documents">
+            <!-- Select -->
+            <td class="ps-3">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [attr.aria-label]="'Select ' + doc.documentType"
+                [checked]="selectedDocumentIds.includes(doc.documentId)"
+                [disabled]="!isPending(doc.status) || isProcessing"
+                (change)="toggleDocument(doc.documentId, $event)"
+              />
+            </td>
+
+            <!-- Document Type -->
+            <td>
+              <div class="fw-semibold">
+                {{ doc.documentType || 'KYC Document' }}
+              </div>
+              <div class="text-secondary small file-name">
+                {{ doc.fileName }}
+              </div>
+            </td>
+
+            <!-- View -->
+            <td>
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary compact-btn"
+                [disabled]="!doc.documentId || isProcessing"
+                (click)="viewDocument(doc)"
+              >
+                View Document
+              </button>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span class="badge status-badge" [ngClass]="getStatusClass(doc.status)">
+                {{ doc.status || 'Pending' }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Empty State -->
+          <tr *ngIf="documents.length === 0">
+            <td colspan="4" class="text-center py-4">
+              <p class="fw-semibold mb-1">No documents found</p>
+              <p class="text-secondary small mb-0">
+                This customer has no documents available for review.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Verification Actions -->
+    <div class="decision-section border-top p-3">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h5 class="fw-semibold mb-0">Verification Decision</h5>
+        <span class="badge bg-primary-subtle text-primary">
+          {{ selectedDocumentIds.length }} selected
+        </span>
+      </div>
+
+      <!-- Rejection Reason -->
+      <div class="mb-3">
+        <label for="rejectionReason" class="form-label small fw-semibold mb-1">
+          Rejection Reason
+        </label>
+
+        <textarea
+          id="rejectionReason"
+          name="rejectionReason"
+          class="form-control form-control-sm"
+          rows="2"
+          [(ngModel)]="rejectionReason"
+          [disabled]="isProcessing"
+          placeholder="Enter the reason if rejecting selected documents"
+        >
+        </textarea>
+
+        <div class="form-text">Required only when rejecting documents.</div>
+      </div>
+
+      <!-- Compact Buttons -->
+      <div class="decision-actions d-flex flex-wrap align-items-center gap-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-success compact-btn"
+          [disabled]="selectedDocumentIds.length === 0 || isLoading || isProcessing"
+          (click)="approveSelected()"
+        >
+          <span
+            *ngIf="isProcessing"
+            class="spinner-border spinner-border-sm me-1"
+            aria-hidden="true"
+          >
+          </span>
+
+          Approve Selected
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-danger compact-btn"
+          [disabled]="selectedDocumentIds.length === 0 || isLoading || isProcessing"
+          (click)="rejectSelected()"
+        >
+          Reject Selected
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary compact-btn"
+          [disabled]="selectedDocumentIds.length === 0 || isProcessing"
+          (click)="selectedDocumentIds = []"
+        >
+          Clear Selection
+        </button>
+      </div>
+
+      <p class="text-secondary small mt-2 mb-0">
+        Only selected pending documents can be processed.
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
+  <div class="card shadow border-0 w-100" style="max-width: 550px">
+    <!-- LoanApp Header -->
+    <div class="card-header bg-primary text-white text-center py-4">
+      <h1 class="h2 fw-bold mb-1">LoanApp</h1>
+      <p class="mb-0">Loan Management System</p>
+    </div>
+
+    <div class="card-body p-4">
+      <h2 class="h4 text-center mb-3">Set Up Two-Factor Authentication</h2>
+
+      <p class="text-secondary text-center">Protect your account using an Authenticator app.</p>
+
+      <!-- Success Message -->
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
+
+      <!-- Error Message -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Generate QR Code -->
+      @if (!qrCodeDataUrl) {
+        <div class="text-center mt-4">
+          <p>Click below to generate your Authenticator setup QR code.</p>
+
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            [disabled]="isSubmitting"
+            (click)="enableTwoFactor()"
+          >
+            {{ isSubmitting ? 'Generating QR Code...' : 'Generate QR Code' }}
+          </button>
+        </div>
+      }
+
+      <!-- QR Code and OTP Verification -->
+      @if (qrCodeDataUrl) {
+        <div class="text-center mt-4">
+          <h3 class="h6 mb-3">1. Scan the QR Code</h3>
+
+          <div class="d-flex justify-content-center mb-3">
+            <img
+              [src]="qrCodeDataUrl"
+              alt="Authenticator setup QR code"
+              width="220"
+              height="220"
+              class="img-fluid border rounded p-2"
+            />
+          </div>
+
+          <p class="text-secondary small">
+            Open Google Authenticator on your phone, add an account, and scan this QR code.
+          </p>
+
+          <!-- Manual Setup Key -->
+          @if (manualEntryKey) {
+            <div class="text-start mt-3 mb-4">
+              <label class="form-label fw-semibold"> Or enter the setup key manually </label>
+
+              <input type="text" class="form-control" [value]="manualEntryKey" readonly />
+
+              <div class="form-text">Keep this key private. Never share it with anyone.</div>
+            </div>
+          }
+
+          <hr class="my-4" />
+
+          <h3 class="h6 mb-3">2. Verify Your Authenticator Code</h3>
+
+          <form #otpForm="ngForm" (ngSubmit)="verifySetupOtp()">
+            <div class="mb-3">
+              <label for="otpCode" class="form-label fw-semibold">
+                6-Digit Verification Code
+              </label>
+
+              <input
+                type="text"
+                id="otpCode"
+                name="otpCode"
+                class="form-control text-center fs-4"
+                [(ngModel)]="otpCode"
+                placeholder="000000"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="otpForm.invalid || isSubmitting"
+            >
+              {{ isSubmitting ? 'Verifying...' : 'Verify & Enable 2FA' }}
+            </button>
+          </form>
+
+          <p class="text-secondary small mt-3 mb-0">
+            2FA will be enabled after the code is verified successfully.
+          </p>
+        </div>
+      }
+
+      <!-- Back Button -->
+      <div class="text-center mt-4">
+        <button type="button" class="btn btn-outline-secondary" (click)="goToLogin()">
+          Back to Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

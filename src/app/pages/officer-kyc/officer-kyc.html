@@ -1,0 +1,200 @@
+<div class="container py-4 py-md-5">
+  <!-- Page Header -->
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">KYC Verification</h2>
+      <p class="text-secondary mb-0">Review customer documents and complete KYC verification.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      (click)="loadPendingCustomers()"
+      [disabled]="isLoadingCustomers"
+    >
+      {{ isLoadingCustomers ? 'Refreshing...' : 'Refresh List' }}
+    </button>
+  </div>
+
+  <!-- Success and Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Pending Customers -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white px-4 py-3">
+      <h5 class="fw-semibold mb-1">Pending Customers</h5>
+      <p class="text-secondary small mb-0">Select a customer to review their KYC documents.</p>
+    </div>
+
+    <div *ngIf="isLoadingCustomers" class="text-center py-4">Loading pending customers...</div>
+
+    <div *ngIf="!isLoadingCustomers" class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Customer ID</th>
+            <th>Customer Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th class="pe-4">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let customer of pendingCustomers">
+            <td class="ps-4">{{ customer.customerId }}</td>
+            <td class="fw-semibold">{{ customer.customerName }}</td>
+            <td>{{ customer.email || '—' }}</td>
+            <td>{{ customer.mobileNo || '—' }}</td>
+            <td class="pe-4">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="reviewCustomer(customer)"
+              >
+                Review KYC
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="pendingCustomers.length === 0">
+            <td colspan="5" class="text-center py-5">
+              <h6 class="fw-semibold">No pending customers</h6>
+              <p class="text-secondary mb-0">
+                There are currently no customers awaiting KYC review.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Selected Customer -->
+  <ng-container *ngIf="selectedCustomer as customer">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex flex-wrap justify-content-between gap-3">
+          <div>
+            <span class="text-secondary small">Selected Customer</span>
+            <h4 class="fw-bold mb-1">{{ customer.customerName }}</h4>
+            <div class="text-secondary">Customer ID: {{ customer.customerId }}</div>
+          </div>
+
+          <div class="text-md-end">
+            <div>{{ customer.email || 'No email available' }}</div>
+            <div class="text-secondary">
+              {{ customer.mobileNo || 'No mobile available' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Documents -->
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-white px-4 py-3">
+        <h5 class="fw-semibold mb-1">Customer Documents</h5>
+        <p class="text-secondary small mb-0">
+          Review the uploaded documents before making a decision.
+        </p>
+      </div>
+
+      <div *ngIf="isLoadingDocuments" class="text-center py-4">Loading customer documents...</div>
+
+      <div *ngIf="!isLoadingDocuments" class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Document Name</th>
+              <th>View Document</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let doc of customerDocuments">
+              <td class="ps-4">
+                <div class="fw-semibold">{{ doc.fileName }}</div>
+                <div class="text-secondary small">{{ doc.documentType }}</div>
+              </td>
+
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  [disabled]="!doc.documentId"
+                  (click)="viewDocument(doc)"
+                >
+                  View Document
+                </button>
+              </td>
+
+              <td>
+                <span class="badge" [ngClass]="getStatusClass(doc.status)">
+                  {{ doc.status || 'Unknown' }}
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="customerDocuments.length === 0">
+              <td colspan="3" class="text-center py-4 text-secondary">
+                No documents found for this customer.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Approve / Reject Actions -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h5 class="fw-semibold mb-2">Verification Decision</h5>
+        <p class="text-secondary small mb-4">
+          Verify the documents carefully before approving or rejecting KYC.
+        </p>
+
+        <div class="mb-3">
+          <label for="rejectionReason" class="form-label fw-semibold"> Rejection Reason </label>
+
+          <textarea
+            id="rejectionReason"
+            name="rejectionReason"
+            class="form-control"
+            rows="3"
+            [(ngModel)]="rejectionReason"
+            placeholder="Enter the reason if you need to reject this KYC"
+          >
+          </textarea>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="btn btn-success px-4"
+            [disabled]="isProcessing || isLoadingDocuments || customerDocuments.length === 0"
+            (click)="approveCustomer()"
+          >
+            {{ isProcessing ? 'Processing...' : 'Approve KYC' }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-danger px-4"
+            [disabled]="isProcessing || isLoadingDocuments || customerDocuments.length === 0"
+            (click)="rejectCustomer()"
+          >
+            {{ isProcessing ? 'Processing...' : 'Reject KYC' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

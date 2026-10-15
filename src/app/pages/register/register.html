@@ -1,0 +1,280 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
+  <div class="card shadow border-0 w-100" style="max-width: 650px">
+    <!-- Header -->
+    <div class="card-header bg-primary text-white text-center py-4">
+      <h1 class="h2 fw-bold mb-1">LoanApp</h1>
+      <p class="mb-0">Loan Management System</p>
+    </div>
+
+    <div class="card-body p-4">
+      <h2 class="h4 text-center mb-4">Customer Registration</h2>
+
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+      <form #registerForm="ngForm" (ngSubmit)="register()">
+        <!-- First Name -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">First Name</label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              class="form-control"
+              name="firstName"
+              [(ngModel)]="formData.firstName"
+              required
+              placeholder="enter first name"
+            />
+          </div>
+        </div>
+
+        <!-- Last Name -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Last Name</label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              class="form-control"
+              name="lastName"
+              [(ngModel)]="formData.lastName"
+              required
+              placeholder="enter last name"
+            />
+          </div>
+        </div>
+
+        <!-- Age -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Age</label>
+          <div class="col-md-8">
+            <input
+              type="number"
+              class="form-control"
+              name="age"
+              [(ngModel)]="formData.age"
+              min="18"
+              max="100"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Email</label>
+          <div class="col-md-8">
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              [(ngModel)]="formData.email"
+              required
+              email
+              placeholder="enter email"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Password</label>
+          <div class="col-md-8">
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              [(ngModel)]="formData.password"
+              minlength="2"
+              required
+              placeholder="enter password"
+            />
+          </div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Mobile No</label>
+          <div class="col-md-8">
+            <input
+              type="tel"
+              class="form-control"
+              name="mobileNo"
+              [(ngModel)]="formData.mobileNo"
+              pattern="[0-9]{10}"
+              maxlength="10"
+              required
+              placeholder="10-digit mobile number"
+            />
+          </div>
+        </div>
+
+        <!-- PAN -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">PAN</label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              class="form-control text-uppercase"
+              name="pan"
+              [(ngModel)]="formData.pan"
+              pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]"
+              maxlength="10"
+              required
+              placeholder="ABCDE1234F"
+            />
+          </div>
+        </div>
+
+        <!-- Aadhaar -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold">Aadhaar No</label>
+          <div class="col-md-8">
+            <input
+              type="text"
+              class="form-control"
+              name="aadhaarNo"
+              [(ngModel)]="formData.aadhaarNo"
+              pattern="[0-9]{12}"
+              maxlength="12"
+              required
+              placeholder="12-digit test number"
+            />
+          </div>
+        </div>
+
+        <!-- Employment Type -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold"> Employment Type </label>
+          <div class="col-md-8">
+            <select
+              class="form-select"
+              name="employmentType"
+              [(ngModel)]="formData.employmentType"
+              required
+            >
+              <option value="">-- Select Employment --</option>
+              <option value="Salaried">Salaried</option>
+              <option value="Business">Business</option>
+              <option value="Self Employed">Self Employed</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Monthly Income -->
+        <div class="row align-items-center mb-3">
+          <label class="col-md-4 col-form-label fw-semibold"> Monthly Income (₹) </label>
+          <div class="col-md-8">
+            <input
+              type="number"
+              class="form-control"
+              name="monthlyIncome"
+              [(ngModel)]="formData.monthlyIncome"
+              min="0"
+              required
+              placeholder="Enter monthly income"
+            />
+          </div>
+        </div>
+
+        <!-- Monthly Investment -->
+        <div class="row align-items-center mb-4">
+          <label class="col-md-4 col-form-label fw-semibold"> Monthly Investment (₹) </label>
+          <div class="col-md-8">
+            <input
+              type="number"
+              class="form-control"
+              name="monthlyInvestment"
+              [(ngModel)]="formData.monthlyInvestment"
+              min="0"
+              required
+              placeholder="Enter monthly investment"
+            />
+          </div>
+        </div>
+
+        <!-- Temporary Validation Debugging -->
+        <!-- <div class="alert alert-warning">
+          <h5 class="alert-heading">Temporary Form Debugging</h5>
+
+          <p class="mb-2"><strong>Form Status:</strong> {{ registerForm.status }}</p>
+
+          <hr />
+
+          <div>
+            First Name:
+            {{ registerForm.controls['firstName']?.errors | json }}
+          </div>
+
+          <div>
+            Last Name:
+            {{ registerForm.controls['lastName']?.errors | json }}
+          </div>
+
+          <div>
+            Age:
+            {{ registerForm.controls['age']?.errors | json }}
+          </div>
+
+          <div>
+            Email:
+            {{ registerForm.controls['email']?.errors | json }}
+          </div>
+
+          <div>
+            Password:
+            {{ registerForm.controls['password']?.errors | json }}
+          </div>
+
+          <div>
+            Mobile No:
+            {{ registerForm.controls['mobileNo']?.errors | json }}
+          </div>
+
+          <div>
+            PAN:
+            {{ registerForm.controls['pan']?.errors | json }}
+          </div>
+
+          <div>
+            Aadhaar No:
+            {{ registerForm.controls['aadhaarNo']?.errors | json }}
+          </div>
+
+          <div>
+            Employment Type:
+            {{ registerForm.controls['employmentType']?.errors | json }}
+          </div>
+
+          <div>
+            Monthly Income:
+            {{ registerForm.controls['monthlyIncome']?.errors | json }}
+          </div>
+
+          <div>
+            Monthly Investment:
+            {{ registerForm.controls['monthlyInvestment']?.errors | json }}
+          </div>
+        </div> -->
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-center gap-3">
+          <button type="submit" class="btn btn-primary px-4" [disabled]="registerForm.invalid">
+            Register
+          </button>
+
+          <button type="button" class="btn btn-outline-secondary px-4" (click)="goToLogin()">
+            Back
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
