@@ -1,0 +1,65 @@
+<table class="table">
+  <thead>
+    <tr>
+            <th>Penalty ID</th>
+            <th>Loan Account ID</th>
+            <th>EMI Schedule ID</th>
+            <th>Penalty Type</th>
+            <th>Penalty Amount</th>
+            <th>Delay Days</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr *ngFor="let p of allpenalties">
+      <th scope="row">{{p.penaltyId}}</th>
+      <td>{{p.loanAccountId}}</td>
+      <td>{{p.emiScheduleId }}</td>
+      <td>{{p.penaltyType}}</td>
+      <td>{{p.penaltyAmount}}</td>
+      <td>{{p.delayDays}}</td>
+      <td>{{p.appliedDate | date:'dd-MM-yyyy'}}</td>
+      <td>{{p.status}}</td>
+      <td>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="ResetPenalty(p.loanAccountId, p.emiScheduleId)">Apply Penalty</button>
+      </td>     
+    </tr>
+
+  </tbody>
+</table>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Apply Penalty</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #penaltyForm="ngForm" (ngSubmit)="ApplyPenalty()">
+          <label>Loan Account ID</label>
+          <input type="number" name="loanAccountId" [(ngModel)]="loanAccountId" class="form-control" required min="1" />
+
+          <br>
+
+          <label>EMI Schedule ID</label>
+          <input type="number" name="emiScheduleId" [(ngModel)]="emiScheduleId" class="form-control" required min="1" />
+
+          <br>
+
+          <label>Penalty Type</label>
+          <input type="text" name="penaltyType" [(ngModel)]="penaltyType" class="form-control" required />
+
+          <br>
+
+          <button type="submit" class="btn btn-danger" [disabled]="penaltyForm.invalid">Apply Penalty</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
